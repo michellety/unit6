@@ -7,49 +7,71 @@ var topics = ["airplane", "skydiving", "Australia", "passport", "luggage", "beac
 //use a loop that appends a button for each string
 
 function displayButtons(){
+    //clear the div for the buttons 
     $("#button-area").empty();
-    for( var i = 0; i < topics.length; i++){
-    var gButton = $("<button>");
-    gButton.text(topics[i]);
-    //give the button an attribute so it is clear which of the many buttons is clicked
-    gButton.attr("data-search", topics[i]);
-    
-    $("#button-area").append(gButton);
+        //loop through the length of the array
+        for( var i = 0; i < topics.length; i++){
+        //create a new button with the class 'btn' 
+        var gButton = $("<button class= 'btn'>");
+        //label the button from the array
+        gButton.text(topics[i]);
+        //give the button an attribute so it is clear which button is clicked
+        gButton.attr("data-search", topics[i]);
+        //append the buttons to the html in the designated location
+        $("#button-area").append(gButton);
     };
 };
+//call the function
 displayButtons();
 
 
 //click event to grab and display 10 static gif images from GIPHY API
 $("button").on("click", function(){
+    //variable to identify what button is clicked
     var x = $(this).data("search");
-    //API key
+
+    //API key requested from the GIPHY website 
     var APIKey = "28ka8PRViH0rvxxad4Vir9qGNEvaTsAT";
 
     //URL to query the GIPHY database
     //x is the search word that is attached to the button clicked 
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + x + "&api_key=" + APIKey + "&limit=10";
     console.log(queryURL);
-    alert(queryURL);
-
+    
     // //AJAX call to the GIPHY API
     $.ajax({
         url: queryURL,
         method: "Get"
         }).then(function(response){
             console.log(response);
-            //get and display gif images 
+            //loop to get and display gif images 
             for(var i=0; i<response.data.length; i++){ 
-                //adding the newest clicked images in front 
-                $("#gif-area").prepend("<img src = '" + response.data[i].images.downsized.url + "'>");
-                //display gif rating 
-
+                //display gif rating in the designated div   
+                //adding the newest clicked images in front, choosing the still version of the image
+                $("#gif-area").prepend("<p> Rating: " + response.data[i].rating + "</p"); 
+                //creating a new variable with jQuery that is an image
+                var gifImage= $("<img>");
+                //giving the image the attribute for the source url of a still image from GIPHY
+                gifImage.attr("src", response.data[i].images.downsized_still.url);
+                //add more attributes to recognize when the image is still or animated, and how to get the different versions
+                gifImage.attr("data-still", response.data[i].images.downsized_still.url);
+                gifImage.attr("data-animate", response.data[i].images.downsized.url);
+                // gifImage.attr("data-state", still);
+                // gifImage.attr("class", gif);
+                $("#gif-area").prepend(gifImage);
                 };
             });
 });
 
-//click event on each image that animates, then stops if clicked again
+//create another click event on each image that animates, then stops if clicked again
+//check the state of the image
+    //if still, when clicked change to animate
+    //else if state is animated, change to still
 
+
+//make an input space to create new search queries and buttons when submitted 
+//onclick event when the user clicks the submit button
+//store their sting and push to the topics array
 
 
 
