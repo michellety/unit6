@@ -25,8 +25,12 @@ function displayButtons(){
 displayButtons();
 
 
+
 //click event to grab and display 10 static gif images from GIPHY API
-$("button").on("click", function(){
+//when button ajrea is clicked, look for identified button
+//area doesnt' get replaced like the buttons 
+//passing 2 parameters 
+$("#button-area").on("click","button",function(){
     //variable to identify what button is clicked
     var x = $(this).data("search");
 
@@ -38,7 +42,7 @@ $("button").on("click", function(){
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + x + "&api_key=" + APIKey + "&limit=10";
     console.log(queryURL);
     
-    // //AJAX call to the GIPHY API
+    //AJAX call to the GIPHY API
     $.ajax({
         url: queryURL,
         method: "Get"
@@ -56,23 +60,55 @@ $("button").on("click", function(){
                 //add more attributes to recognize when the image is still or animated, and how to get the different versions
                 gifImage.attr("data-still", response.data[i].images.downsized_still.url);
                 gifImage.attr("data-animate", response.data[i].images.downsized.url);
-                // gifImage.attr("data-state", still);
-                // gifImage.attr("class", gif);
+                //in quotes to show string 
+                gifImage.attr("data-state", "still");
+                gifImage.attr("class", "gif");
                 $("#gif-area").prepend(gifImage);
                 };
             });
 });
 
 //create another click event on each image that animates, then stops if clicked again
-//check the state of the image
+
+//add to body so the function is ready, then activates when gif is clicked.  
+//could also replace body with .gif and place in the response function 
+$("body").on("click", ".gif", function() {
+    //check the state of the image
+    var state = $(this).attr("data-state");
+    
     //if still, when clicked change to animate
-    //else if state is animated, change to still
+    if (state === "still"){
+        var dataAnimate = $(this).attr("data-animate");
+        $(this).attr("src", dataAnimate);
+        $(this).attr("data-state", "animate");
+        }   //else if state is animated, change to still
+            else if (state === "animate"){
+            var dataStill = $(this).attr("data-still");
+            $(this).attr("src", dataStill);
+            $(this).attr("data-state", "still");
+        };
+});
 
 
 //make an input space to create new search queries and buttons when submitted 
 //onclick event when the user clicks the submit button
-//store their sting and push to the topics array
 
 
+     $("#submit-button").on("click", function(event){
+         event.preventDefault();
+         var search = $("#submit-input").val();
+         //prevent a button that already exists from being created again 
+         if (!topics.includes(search)){
+           //store their sting and push to the topics array
+            topics.push(search); 
+            
+            displayButtons();  
+         }
+     
+    
+    });
+
+
+ 
 
 });
