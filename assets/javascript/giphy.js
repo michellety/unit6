@@ -27,8 +27,7 @@ displayButtons();
 
 
 //click event to grab and display 10 static gif images from GIPHY API
-//when button ajrea is clicked, look for identified button
-//area doesnt' get replaced like the buttons 
+//when button area is clicked, look for identified button
 //passing 2 parameters 
 $("#button-area").on("click","button",function(){
     //variable to identify what button is clicked
@@ -89,26 +88,19 @@ $("body").on("click", ".gif", function() {
         };
 });
 
-
 //make an input space to create new search queries and buttons when submitted 
 //onclick event when the user clicks the submit button
 
-
      $("#submit-button").on("click", function(event){
+         //prevent the default action from happening 
          event.preventDefault();
          var search = $("#submit-input").val();
          //prevent a button that already exists from being created again 
          if (!topics.includes(search)){
            //store their sting and push to the topics array
             topics.push(search); 
-            
+            //call the display buttons function again  
             displayButtons();  
          }
-     
-    
     });
-
-
- 
-
 });
